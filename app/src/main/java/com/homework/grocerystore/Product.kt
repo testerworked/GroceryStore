@@ -1,7 +1,10 @@
 package com.homework.grocerystore
 
+import android.net.Uri
+
+
 data class Product(
     val name: String,
     val price: String,
-    val imageUri: String
+    val imageUri: Uri
 )
