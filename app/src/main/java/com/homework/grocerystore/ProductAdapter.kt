@@ -10,25 +10,28 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class ProductAdapter(context: Context, private val productList: List<Product>) :
-    ArrayAdapter<Product>(context, 0, productList) {
+class ProductAdapter(private val context: Context, private val products: MutableList<Product>) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val ivProductImage: ImageView = itemView.findViewById(R.id.ivProductImage)
+        val tvProductName: TextView = itemView.findViewById(R.id.tvProductName)
+        val tvProductPrice: TextView = itemView.findViewById(R.id.tvProductPrice)
+    }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_product, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val itemView = LayoutInflater.from(context).inflate(R.layout.item_product, parent, false)
+        return ViewHolder(itemView)
+    }
 
-        val product = productList[position]
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.ivProductImage.setImageURI(products[position].imageUri)
+        holder.tvProductName.text = products[position].name
+        holder.tvProductPrice.text = "${products[position].price} руб."
+    }
 
-        val ivProductImage: ImageView = view.findViewById(R.id.ivProductImage)
-        val tvProductName: TextView = view.findViewById(R.id.tvProductName)
-        val tvProductPrice: TextView = view.findViewById(R.id.tvProductPrice)
-
-        // Загрузка изображения с помощью Glide
-        Glide.with(context).load(product.imageUri).into(ivProductImage)
-        tvProductName.text = product.name
-        tvProductPrice.text = product.price
-
-        return view
+    override fun getItemCount(): Int {
+        return products.size
     }
 }
